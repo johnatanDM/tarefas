@@ -57,23 +57,25 @@ export default () => {
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('taskState', jsonValue)
+      await AsyncStorage.setItem('tasks', jsonValue)
     } catch (e) {
       console.warn(e)
     }
   }
 
+  useEffect(() => {
+    getStoreData()
+  },[])
+
   const getStoreData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('taskState')
-      jsonValue != null ? JSON.parse(jsonValue) : tarefasIniciais
+      const value = await AsyncStorage.getItem('tasks')
+      const jsonValue = JSON.parse(value)
+      setTarefas(jsonValue)
     } catch(e) {
       console.warn(e)
   }
 }
-
-
-
 
 
   const toggleTask = taskId => {
@@ -85,11 +87,7 @@ export default () => {
     })
     setTarefas({ ...tarefas, tasks })
   }
-  
-  useEffect(() => {
-    const saved = getStoreData()
-    setTarefas(saved)
-  }, [])
+
 
   useEffect(() => {
     filterTasks()
